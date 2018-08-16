@@ -32,27 +32,56 @@ for i in range(0, 5572):
 
 # Creating the Bag of Words model
 from sklearn.feature_extraction.text import CountVectorizer
-cv = CountVectorizer(max_features = 150000)
+cv = CountVectorizer(max_features = 10000)
 X = cv.fit_transform(corpus).toarray()
 
 # Splitting the dataset into the Training set and Test set
 from sklearn.model_selection import train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.30, random_state = 1)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.30, shuffle=True)
 
-# Fitting Naive Bayes to the Training set
+# Fitting classifier to the Training set
 from sklearn.naive_bayes import MultinomialNB
-classifier = MultinomialNB()
-classifier.fit(X_train, y_train)
+from sklearn import svm
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import BaggingClassifier
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.linear_model import LogisticRegression
+
+svc = svm.SVC(kernel='sigmoid', gamma=1.0)
+knn = KNeighborsClassifier(n_neighbors=49)
+mnb = MultinomialNB(alpha=0.2)
+dtc = DecisionTreeClassifier(min_samples_split=7, random_state=111)
+lrc = LogisticRegression(solver='liblinear', penalty='l1')
+rfc = RandomForestClassifier(n_estimators=31, random_state=111)
+abc = AdaBoostClassifier(n_estimators=62, random_state=111)
+bc = BaggingClassifier(n_estimators=9, random_state=111)
+etc = ExtraTreesClassifier(n_estimators=9, random_state=111)
+
+print('Fitting different classifier')
+classifier = [svc, knn, mnb, dtc, lrc, rfc, abc, bc, etc]
+classifier_names = ['SVM', 'KNN', 'MNB', 'DTC', 'LRC', 'RFC', 'ABC', 'BC', 'ETC']
+for i in classifier:
+    i.fit(X_train, y_train)
 
 # Predicting the Test set results
 acc = 0
-y_pred = classifier.predict(X_test)
-for i in range(len(y_pred)):
-    if y_pred[i] == y_test[i]:
-        acc += 1
-print(acc/len(y_pred))
+y_pred = []
+accuracy = []
+for i in range(len(classifier)):
+    y_pred.append(classifier[i].predict(X_test))
+for y_pre in y_pred:
+    acc = 0
+    for i in range(len(y_pre)):
+        if y_pre[i] == y_test[i]:
+            acc += 1
+    accuracy.append(100*(acc/len(y_pre)))
 
-# Making the Confusion Matrix
-from sklearn.metrics import confusion_matrix
-cm = confusion_matrix(y_test, y_pred)
-print(cm)
+import matplotlib.pyplot as plt
+plt.xlabel('Classifier')
+plt.ylabel('Accuracy')
+plt.title('Accuracy using different classifier')
+plt.bar(classifier_names, accuracy)
+plt.show()
