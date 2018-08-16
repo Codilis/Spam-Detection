@@ -6,4 +6,4 @@ Used Multinomial Naive Bayes classifier for training and testing of dataset, NLT
 
 Accuracy achieved is nearly 98%
 
-![alt text](https://drive.google.com/open?id=1BfjnF5UOdoC3uZsLfhGlYw7KFN3pgFH2)
+![download](https://user-images.githubusercontent.com/24753654/44203275-0f4c5200-a16c-11e8-9935-d78933f934a1.png)
