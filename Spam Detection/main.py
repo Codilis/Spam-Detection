@@ -85,3 +85,9 @@ plt.ylabel('Accuracy')
 plt.title('Accuracy using different classifier')
 plt.bar(classifier_names, accuracy)
 plt.show()
+
+# Making the Confusion Matrix
+from sklearn.metrics import confusion_matrix
+for i in range(len(y_pred)):
+    cm = confusion_matrix(y_test, y_pred[i])
+    print(classifier_names[i],"\n", cm)
